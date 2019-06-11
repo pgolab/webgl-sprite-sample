@@ -12,8 +12,8 @@ function initBackgroundProgram(gl, backgroundProgram) {
     // ToDo: implement track record
     // https://webglfundamentals.org/webgl/lessons/webgl-2-textures.html
 
-    // ToDo: implement blur
-    // https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html
+    programInfo.textureSizeLocation = gl.getUniformLocation(programInfo.program, 'texture_size');
+    programInfo.kernelLocation = gl.getUniformLocation(programInfo.program, 'kernel');
 
     programInfo.positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, programInfo.positionBuffer);
@@ -58,8 +58,8 @@ function drawBackground(gl, backgroundProgramInfo) {
     transformationMatrix = m4.scale(transformationMatrix, gl.canvas.width, backgroundProgramInfo.textureInfo.height * ratio, 1);
     gl.uniformMatrix4fv(backgroundProgramInfo.transformMatrixLocation, false, transformationMatrix);
 
-    // ToDo: implement blur
-    // https://webglfundamentals.org/webgl/lessons/webgl-image-processing.html
+    gl.uniform2f(backgroundProgramInfo.textureSizeLocation, backgroundProgramInfo.textureInfo.width, backgroundProgramInfo.textureInfo.height);
+    gl.uniform1fv(backgroundProgramInfo.kernelLocation, BLUR_KERNEL);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
