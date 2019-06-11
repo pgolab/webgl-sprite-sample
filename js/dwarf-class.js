@@ -3,8 +3,8 @@ class DwarfClass {
         this.vx = 1;
         this.vy = 1;
 
-        this.x = 0;
-        this.y = 0;
+        this.x = Math.round(TILE_SIZE / 2);
+        this.y = Math.round(TILE_SIZE / 2);
 
         this.loop = LOOPS.WALK_RIGHT;
         this.loopFrame = 0;

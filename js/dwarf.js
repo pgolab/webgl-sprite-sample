@@ -7,7 +7,7 @@ function initDwarfProgram(gl, dwarfProgram) {
     programInfo.textureCoordinatesLocation = gl.getAttribLocation(programInfo.program, 'texture_coordinates');
 
     programInfo.transformMatrixLocation = gl.getUniformLocation(programInfo.program, 'transform_matrix');
-    // ToDo: add texture matrix
+    programInfo.textureMatrixLocation = gl.getUniformLocation(programInfo.program, 'texture_matrix');
 
     programInfo.textureLocation = gl.getUniformLocation(programInfo.program, 'sprite_texture');
 
@@ -44,16 +44,17 @@ function drawDwarf(gl, dwarfProgramInfo) {
 
     let transformationMatrix = m4.orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
     transformationMatrix = m4.translate(transformationMatrix, dwarfProgramInfo.dwarf.x, dwarfProgramInfo.dwarf.y, 0);
-    transformationMatrix = m4.scale(transformationMatrix, dwarfProgramInfo.textureInfo.width, dwarfProgramInfo.textureInfo.height, 1);
+    transformationMatrix = m4.translate(transformationMatrix, -TILE_SIZE / 2, -TILE_SIZE / 2, 0);
+    transformationMatrix = m4.scale(transformationMatrix, TILE_SIZE, TILE_SIZE, 1);
     gl.uniformMatrix4fv(dwarfProgramInfo.transformMatrixLocation, false, transformationMatrix);
 
-    // ToDo: add texture matrix and update transformation matrix
+    const textureMatrix = createFrameSelectMatrix(dwarfProgramInfo.dwarf.loopFrame, dwarfProgramInfo.dwarf.loop.row, dwarfProgramInfo.textureInfo);
+    gl.uniformMatrix4fv(dwarfProgramInfo.textureMatrixLocation, false, textureMatrix);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
 
 function createFrameSelectMatrix(x, y, textureInfo) {
-    // ToDo: implement matrix for frame selection
-    // https://webglfundamentals.org/webgl/lessons/webgl-2d-drawimage.html
-    return m4.identity();
+    let textureMatrix = m4.translation((x * TILE_SIZE) / textureInfo.width, (y * TILE_SIZE) / textureInfo.height, 0);
+    return m4.scale(textureMatrix, TILE_SIZE / textureInfo.width, TILE_SIZE / textureInfo.height);
 }
