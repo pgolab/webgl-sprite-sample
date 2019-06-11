@@ -9,8 +9,7 @@ function initBackgroundProgram(gl, backgroundProgram) {
     programInfo.transformMatrixLocation = gl.getUniformLocation(programInfo.program, 'transform_matrix');
 
     programInfo.textureLocation = gl.getUniformLocation(programInfo.program, 'background_texture');
-    // ToDo: implement track record
-    // https://webglfundamentals.org/webgl/lessons/webgl-2-textures.html
+    programInfo.trackLocation = gl.getUniformLocation(programInfo.program, 'track_texture');
 
     programInfo.textureSizeLocation = gl.getUniformLocation(programInfo.program, 'texture_size');
     programInfo.kernelLocation = gl.getUniformLocation(programInfo.program, 'kernel');
@@ -48,10 +47,13 @@ function drawBackground(gl, backgroundProgramInfo) {
     gl.vertexAttribPointer(backgroundProgramInfo.textureCoordinatesLocation, 2, gl.FLOAT, false, 0, 0);
 
     gl.uniform1i(backgroundProgramInfo.textureLocation, 0);
+    gl.uniform1i(backgroundProgramInfo.trackLocation, 1);
 
+    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, backgroundProgramInfo.textureInfo.texture);
-    // ToDo: implement track record
-    // https://webglfundamentals.org/webgl/lessons/webgl-2-textures.html
+    gl.activeTexture(gl.TEXTURE1);
+    backgroundProgramInfo.track.createTexture(gl);
+    gl.activeTexture(gl.TEXTURE0);
 
     let transformationMatrix = m4.orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
     const ratio = gl.canvas.width / backgroundProgramInfo.textureInfo.width;
