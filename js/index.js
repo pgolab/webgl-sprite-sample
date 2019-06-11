@@ -51,9 +51,20 @@ function render(gl, drawInfo, dwarfProgramInfo, backgroundProgramInfo, time) {
 }
 
 function updateDrawInfo(drawInfo, time) {
-    // ToDo: calculate current frame and fill other data
+    const timeInSeconds = time / 1000;
+    const delta = timeInSeconds - drawInfo.lastUpdate;
+    const frameNumber = Math.round(FRAMERATE * delta) % FRAMERATE;
 
-    return Object.assign({}, drawInfo, { changed: true });
+    if (frameNumber > 0) {
+        return Object.assign({}, drawInfo, {
+            animationFrame: (drawInfo.animationFrame + frameNumber) % FRAMERATE,
+            lastUpdate: timeInSeconds,
+            delta,
+            changed: true
+        });
+    }
+
+    return Object.assign({}, drawInfo, { changed: false });
 }
 
 function draw(gl, dwarfProgramInfo, backgroundProgramInfo) {
@@ -62,7 +73,6 @@ function draw(gl, dwarfProgramInfo, backgroundProgramInfo) {
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // ToDo: enable background drawing
-    // drawBackground(gl, backgroundProgramInfo);
+    drawBackground(gl, backgroundProgramInfo);
     drawDwarf(gl, dwarfProgramInfo);
 }

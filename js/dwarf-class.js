@@ -6,12 +6,12 @@ class DwarfClass {
         this.x = Math.round(TILE_SIZE / 2);
         this.y = Math.round(TILE_SIZE / 2);
 
-        this.loop = LOOPS.WALK_RIGHT;
+        this.loop = LOOPS.IDLE_RIGHT;
         this.loopFrame = 0;
     }
 
     update(drawInfo, canvasSize) {
-        // ToDo: animate sprite cycle
+        this.loopFrame = Math.round((this.loop.framesCount - 1) * (drawInfo.animationFrame / FRAMERATE));
 
         // ToDo: animate random movement
     }
